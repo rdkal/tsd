@@ -13,7 +13,6 @@ import (
 )
 
 func main() {
-	// defer profile.Start().Stop()
 	file, err := os.Create("data.csv")
 	if err != nil {
 		log.Fatal(err)
