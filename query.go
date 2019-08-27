@@ -1,7 +1,6 @@
 package tsd
 
 import (
-	"compress/gzip"
 	"fmt"
 	"io"
 	"os"
@@ -9,6 +8,8 @@ import (
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/klauspost/pgzip"
 )
 
 type Query struct {
@@ -231,7 +232,7 @@ func (q *Query) makeScanner() *mulScanner {
 				return nil
 			}
 			if strings.HasSuffix(file.Name(), ".gz") {
-				gz, err := gzip.NewReader(file)
+				gz, err := pgzip.NewReader(file)
 				if err != nil {
 					q.once.Do(func() { q.err = err })
 					return nil
