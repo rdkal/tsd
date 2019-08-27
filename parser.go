@@ -115,10 +115,15 @@ func (r *parser) Next() bool {
 			return false
 		}
 	}
-	if err := r.parse(r.s.Bytes()); err != nil {
-		if err == errFilter {
-			return r.Next()
+
+	err := r.parse(r.s.Bytes())
+	for err == errFilter {
+		if !r.s.Scan() {
+			return false
 		}
+		err = r.parse(r.s.Bytes())
+	}
+	if err != nil {
 		r.err = err
 		return false
 	}
