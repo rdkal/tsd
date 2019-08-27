@@ -44,34 +44,33 @@ func (proj projection) exec(output interface{}, buf buffer) error {
 }
 
 func assign(dest interface{}, src interface{}) error {
-	err := fmt.Errorf("can't assign %T to %T", src, dest)
 	switch d := dest.(type) {
 	case *time.Time:
 		s, ok := src.(time.Time)
 		if !ok {
-			return err
+			return &errTypeMismatch{src: src, dest: dest, op: "assign"}
 		}
 		*d = s
 	case *string:
 		s, ok := src.(string)
 		if !ok {
-			return err
+			return &errTypeMismatch{src: src, dest: dest, op: "assign"}
 		}
 		*d = s
 	case *int:
 		s, ok := src.(int)
 		if !ok {
-			return err
+			return &errTypeMismatch{src: src, dest: dest, op: "assign"}
 		}
 		*d = s
 	case *float64:
 		s, ok := src.(float64)
 		if !ok {
-			return err
+			return &errTypeMismatch{src: src, dest: dest, op: "assign"}
 		}
 		*d = s
 	default:
-		return err
+		return &errTypeMismatch{src: src, dest: dest, op: "assign"}
 	}
 	return nil
 }
