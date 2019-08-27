@@ -5,43 +5,52 @@ import (
 	"time"
 )
 
+type errTypeMismatch struct {
+	dest interface{}
+	op   string
+	src  interface{}
+}
+
+func (err *errTypeMismatch) Error() string {
+	return fmt.Sprintf("can't %v %T to %T", err.op, err.src, err.dest)
+}
+
 type buffer []interface{}
 
 func (buf buffer) get(i Input) interface{} { return buf[i] }
 
 func (buf buffer) append(input Input, val interface{}) error {
-	err := fmt.Errorf("can't append %T to %T", val, buf[input])
 	switch bb := buf[input].(type) {
 	case []time.Time:
 		v, ok := val.(*time.Time)
 		if !ok {
-			return err
+			return &errTypeMismatch{val, "append", buf[input]}
 		}
 		bb = append(bb, *v)
 		buf[input] = bb
 	case []string:
 		v, ok := val.(*string)
 		if !ok {
-			return err
+			return &errTypeMismatch{val, "append", buf[input]}
 		}
 		bb = append(bb, *v)
 		buf[input] = bb
 	case []int:
 		v, ok := val.(*int)
 		if !ok {
-			return err
+			return &errTypeMismatch{val, "append", buf[input]}
 		}
 		bb = append(bb, *v)
 		buf[input] = bb
 	case []float64:
 		v, ok := val.(*float64)
 		if !ok {
-			return err
+			return &errTypeMismatch{val, "append", buf[input]}
 		}
 		bb = append(bb, *v)
 		buf[input] = bb
 	default:
-		return err
+		return &errTypeMismatch{val, "append", buf[input]}
 	}
 	return nil
 }
