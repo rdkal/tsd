@@ -5,8 +5,9 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"strconv"
 	"time"
+
+	"github.com/derpness/bytesconv"
 )
 
 var fieldSep = []byte{','}
@@ -170,7 +171,7 @@ func (r *parser) parse(bb []byte) error {
 			}
 			r.buf[i] = string(bb)
 		case "int":
-			n, err := strconv.Atoi(string(bb))
+			n, err := bytesconv.Atoi(bb)
 			if err != nil {
 				r.err = err
 				return r.err
@@ -180,7 +181,7 @@ func (r *parser) parse(bb []byte) error {
 			}
 			r.buf[i] = n
 		case "float64":
-			n, err := strconv.ParseFloat(string(bb), 64)
+			n, err := bytesconv.ParseFloat(bb, 64)
 			if err != nil {
 				r.err = err
 				return r.err
