@@ -8,11 +8,6 @@ import (
 )
 
 func Test_Parse(t *testing.T) {
-	// scanner, err := newMulScanner(5, ioutil.NopCloser(strings.NewReader(data)))
-	// if err != nil {
-	// t.Error(err)
-	// return
-	// }
 	pp, err := newParser(parserConfig{
 		Soruce: bufio.NewScanner(strings.NewReader(data)),
 		From:   time.Date(2019, 5, 1, 00, 00, 00, 0, time.UTC),
