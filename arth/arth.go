@@ -40,6 +40,9 @@ func Exec(f ID, output interface{}, input ...interface{}) error {
 		}
 		volumes := input[0].([]int)
 		prices := input[1].([]float64)
+		if len(volumes) == 0 {
+			return fmt.Errorf("arth: empty input to vwap")
+		}
 		a := output.(*float64)
 		vwap(a, volumes, prices)
 	case First:
