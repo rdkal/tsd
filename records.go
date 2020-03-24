@@ -35,8 +35,8 @@ func (r *records) Next() bool {
 		return false
 	}
 	r.group.reset()
-	r.pp.Until(r.cursor.Add(r.period))
-	r.cursor = r.cursor.Add(r.period)
+	r.cursor = r.cursor.Add(r.period).Truncate(r.period)
+	r.pp.Until(r.cursor)
 	for r.pp.Next() {
 		if r.err = r.pp.Scan(r.record...); r.err != nil {
 			return false
