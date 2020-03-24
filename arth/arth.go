@@ -105,12 +105,14 @@ func collect(output interface{}, input ...interface{}) error {
 }
 
 func sumFloat(ans *float64, nn []float64) {
+	*ans = 0
 	for _, n := range nn {
 		*ans += n
 	}
 }
 
 func sumInt(ans *int, nn []int) {
+	*ans = 0
 	for _, n := range nn {
 		*ans += n
 	}
