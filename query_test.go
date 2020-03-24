@@ -28,8 +28,8 @@ func Test_Query(t *testing.T) {
 	}
 
 	iter := tsd.Exec(q)
-	if err := iter.Err(); err != nil {
-		t.Error(err)
+	if err := iter.Err(); err == tsd.ErrNoRecords {
+		return
 	}
 	type record struct {
 		ts      time.Time

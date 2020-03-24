@@ -12,6 +12,8 @@ import (
 	"github.com/klauspost/pgzip"
 )
 
+var ErrNoRecords = fmt.Errorf("tsd: no records could be found")
+
 type Query struct {
 	Series  string
 	Where   []string
@@ -50,6 +52,9 @@ func Exec(q Query) Iter {
 
 	rec, err := exec(q)
 	if err != nil {
+		if err == ErrNoRecords {
+			return &records{err: ErrNoRecords}
+		}
 		return &records{err: fmt.Errorf("tsd: %v", err)}
 	}
 	if err := rec.initBuffer(); err != nil {
@@ -243,7 +248,10 @@ func (q *Query) makeScanner() *mulScanner {
 			}
 		}
 	}
-
+	if len(files) == 0 {
+		q.once.Do(func() { q.err = ErrNoRecords })
+		return nil
+	}
 	scanner, err := newMulScanner(len(q.kinds), files...)
 	if err != nil {
 		q.once.Do(func() { q.err = err })
